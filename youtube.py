@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-from database import cargar_registro, guardar_registro, insertar_comentario
+from database import cargar_registro, guardar_registro, insertar_comentario, insertar_log
 
 CHROME_PROFILE_PATH = "C:/Users/alex2/AppData/Local/Google/Chrome/User Data/Profile 2"
 
@@ -51,19 +51,25 @@ def search_and_play_youtube_video(search_query, comment_text, producto_id, categ
 
                 # Concatenar el enlace al comentario para publicarlo en YouTube
                 comentario_youtube = f"{comment_text}\n\nEnlace del producto: {link_producto}"
+                insertar_log('info', f'Intentando comentar en el video: {video_url}')
 
                 if leave_comment(driver, comentario_youtube):
                     video_log_id = guardar_registro(video_id)
                     insertar_comentario(comment_text, producto_id, video_log_id, categoria_id) #----------------------------
+                    insertar_log('success', f'Comentario publicado exitosamente en el video: {video_url}')
                     return
+                else:
+                    insertar_log('error', f'Error al intentar comentar en el video: {video_url}')
                 return
         print("No se encontraron videos nuevos para comentar.")
+        insertar_log('info', 'No se encontraron videos nuevos para comentar.')
 
     finally:
         driver.quit()
 
 def leave_comment(driver, comment_text):
     try:
+        insertar_log('info', 'dentro de leave_comment')
         actions = ActionChains(driver)
         actions.send_keys(Keys.PAGE_DOWN).perform()
         time.sleep(2)
@@ -84,4 +90,5 @@ def leave_comment(driver, comment_text):
         return True
     except Exception as e:
         print(f"Error al intentar comentar: {e}")
+        insertar_log('error', 'Error al intentar publicar un comentario.', details=str(e))
         return False

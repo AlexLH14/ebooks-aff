@@ -1,7 +1,7 @@
 from insert_data import insertar_categoria, insertar_variante, insertar_producto
 from categories import obtener_categorias, obtener_variantes_por_categoria, obtener_links_por_categoria
 import sqlite3
-from database import DB_PATH, inicializar_db, obtener_comentarios
+from database import DB_PATH, inicializar_db, obtener_comentarios, obtener_logs
 
 
 # Inicializar la base de datos y crear las tablas si no existen
@@ -37,7 +37,7 @@ print("Tablas creadas:", tablas)
 
 
 #VERIFICAR DATOS INSERTADOS
-#'''
+'''
 # Verificar categorías
 print("Categorías:", obtener_categorias())
 
@@ -46,9 +46,9 @@ print("Variantes de búsqueda:", obtener_variantes_por_categoria(1))  # 1: ID de
 
 # Verificar productos
 print("Productos:", obtener_links_por_categoria(1))  # 1: ID de la categoría "smartphones"
-#'''
+'''
 
-
+'''
 # Obtener y mostrar los comentarios
 comentarios = obtener_comentarios()
 print("Comentarios registrados:")
@@ -61,4 +61,15 @@ for comentario in comentarios:
     print(f"Video ID: {comentario[4]}")
     print(f"Timestamp: {comentario[5]}")
     print(f"Video URL: {video_url}")  # Mostrar el link del video
+    print("-" * 40)
+'''
+
+logs = obtener_logs()
+print("Logs registrados:")
+for log in logs:
+    print(f"ID: {log[0]}")
+    print(f"Timestamp: {log[1]}")
+    print(f"Status: {log[2]}")
+    print(f"Message: {log[3]}")
+    print(f"Details: {log[4]}")
     print("-" * 40)

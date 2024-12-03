@@ -57,7 +57,16 @@ def inicializar_db():
             )
         ''')
 
-
+    # Crear la tabla de logs
+    cursor.execute('''
+            CREATE TABLE IF NOT EXISTS logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp DATETIME DEFAULT (datetime('now', 'localtime')),
+                status TEXT NOT NULL,
+                message TEXT NOT NULL,
+                details TEXT
+            )
+        ''')
 
     conexion.commit()
     conexion.close()
@@ -115,3 +124,39 @@ def obtener_comentarios():
     comentarios = cursor.fetchall()
     conexion.close()
     return comentarios
+
+
+def insertar_log(status, message, details=None):
+    """
+    Inserta un registro en la tabla de logs.
+    :param status: Estado del evento ('success' o 'error').
+    :param message: Mensaje descriptivo del log.
+    :param details: (Opcional) Detalles adicionales del evento.
+    """
+    conexion = sqlite3.connect(DB_PATH)
+    cursor = conexion.cursor()
+
+    try:
+        cursor.execute('''
+            INSERT INTO logs (status, message, details)
+            VALUES (?, ?, ?)
+        ''', (status, message, details))
+        conexion.commit()
+        print("Log registrado exitosamente.")
+    except sqlite3.Error as e:
+        print(f"Error al registrar log: {e}")
+    finally:
+        conexion.close()
+
+
+
+def obtener_logs():
+    """
+    Obtiene todos los registros de la tabla logs.
+    """
+    conexion = sqlite3.connect(DB_PATH)
+    cursor = conexion.cursor()
+    cursor.execute('SELECT * FROM logs ORDER BY timestamp DESC')
+    logs = cursor.fetchall()
+    conexion.close()
+    return logs
