@@ -1,31 +1,31 @@
-from amazon import obtener_titulo_producto_amazon
-from ai_recommendations import generate_recommendation
-from youtube import search_and_play_youtube_video
-from categories import (
-    seleccionar_categoria_aleatoria,
-    seleccionar_variante_aleatoria,
-    seleccionar_link_aleatorio
+from scraping.amazon import get_product_title_amazon
+from utils.ai_recommendations import generate_recommendation
+from scraping.youtube import search_and_play_youtube_video
+from utils.categories import (
+    select_random_category,
+    select_random_variant,
+    select_random_link
 )
-from database import inicializar_db
+from database.db_config import start_db
 
-inicializar_db()
+start_db()
 
 # Selección aleatoria de categoría
-categoria = seleccionar_categoria_aleatoria()
+categoria = select_random_category()
 if categoria:
     categoria_id, categoria_nombre = categoria
 
     # Selección aleatoria de variante
-    search_variant = seleccionar_variante_aleatoria(categoria_id)
+    search_variant = select_random_variant(categoria_id)
 
     # Selección aleatoria de link y producto ID
-    link_data = seleccionar_link_aleatorio(categoria_id)
+    link_data = select_random_link(categoria_id)
     if link_data:
         producto_id, selected_link = link_data
 
         if search_variant:
             # Obtener el título del producto
-            titulo_producto = obtener_titulo_producto_amazon(selected_link)
+            titulo_producto = get_product_title_amazon(selected_link)
 
             # Generar comentario con Cohere
             try:
