@@ -48,7 +48,7 @@ print("Variantes de búsqueda:", get_variants_by_category(1))  # 1: ID de la cat
 print("Productos:", get_links_by_category(1))  # 1: ID de la categoría "smartphones"
 '''
 
-#'''
+'''
 # Obtener y mostrar los comentarios
 comentarios = get_comments()
 print("Comentarios registrados:")
@@ -62,8 +62,8 @@ for comentario in comentarios:
     print(f"Timestamp: {comentario[5]}")
     print(f"Video URL: {video_url}")  # Mostrar el link del video
     print("-" * 40)
-#'''
 '''
+#'''
 logs = get_logs()
 print("Logs registrados:")
 for log in logs:
@@ -74,4 +74,4 @@ for log in logs:
     print(f"Details: {log[4]}")
     print("-" * 40)
     
-'''
+#'''

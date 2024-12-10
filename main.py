@@ -31,6 +31,7 @@ if categoria:
             try:
                 recommendation = generate_recommendation(titulo_producto)
                 print(f"Comentario generado:\n{recommendation}")
+                print("pruebas ----------------------------")
 
                 # Publicar comentario en YouTube
                 search_and_play_youtube_video(search_variant, recommendation, producto_id, categoria_id, selected_link)

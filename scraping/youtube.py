@@ -1,4 +1,5 @@
 #'''
+
 import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -71,6 +72,7 @@ def search_and_play_youtube_video(search_query, comment_text, producto_id, categ
                     video_log_id = save_record(video_id)
                     insert_comment(comment_text, producto_id, video_log_id, categoria_id) #----------------------------
                     insert_log('success', f'Comentario publicado exitosamente en el video: {video_url}')
+                    time.sleep(10)
                     return
                 else:
                     insert_log('error', f'Error al intentar comentar en el video: {video_url}')

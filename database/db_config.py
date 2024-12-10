@@ -163,3 +163,4 @@ def get_logs():
     logs = cursor.fetchall()
     conexion.close()
     return logs
+

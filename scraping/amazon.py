@@ -1,4 +1,5 @@
 #'''
+
 from selenium import webdriver
 from database.db_config import insert_log
 from selenium.webdriver.common.by import By
