@@ -7,8 +7,18 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import time
+from urllib.parse import urlparse
 
 from selenium.webdriver.chrome.options import Options
+
+def get_product_title(url):
+    domain = urlparse(url).netloc
+    if "amazon" in domain:
+        return get_product_title_amazon(url)
+    elif "mercadolibre" in domain:
+        return get_product_title_mercadolibre(url)
+    else:
+        raise ValueError("URL no soportada. Solo Amazon o Mercado Libre son válidos.")
 
 def get_remote_driver():
     """Configura un controlador remoto para Selenium."""
@@ -24,7 +34,7 @@ def get_remote_driver():
     return driver
 
 def get_product_title_amazon(url):
-    print("Iniciando amazon.py----------")
+    print("Iniciando get_title.py----------")
     driver = get_remote_driver()  # Utiliza el controlador remoto
 
     try:
@@ -63,6 +73,27 @@ def skip_captcha(driver):
         time.sleep(2)  # Agregar una pausa breve después de refrescar
 
 
+def get_product_title_mercadolibre(url):
+    print("Iniciando mercadolibre.py----------")
+    driver = get_remote_driver()
+
+    try:
+        driver.get(url)
+        time.sleep(3)
+
+        titulo_elemento = driver.find_element(By.CLASS_NAME, "ui-pdp-title")
+        titulo = titulo_elemento.text.strip() if titulo_elemento else "No se encontró el título del producto"
+        print(titulo)
+
+        insert_log('success', f'Título obtenido exitosamente: "{titulo}" para la URL: {url}')
+        return titulo
+    except Exception as e:
+        insert_log('error', 'Error al obtener el título del producto', details=str(e))
+        return f"Error al obtener el producto: {e}"
+    finally:
+        driver.quit()
+
+
 
 '''
 from selenium import webdriver
@@ -72,11 +103,21 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import time
+from urllib.parse import urlparse
 
+
+def get_product_title(url):
+    domain = urlparse(url).netloc
+    if "amazon" in domain:
+        return get_product_title_amazon(url)
+    elif "mercadolibre" in domain:
+        return get_product_title_mercadolibre(url)
+    else:
+        raise ValueError("URL no soportada. Solo Amazon o Mercado Libre son válidos.")
 def get_product_title_amazon(url):
     driver = webdriver.Chrome()
     driver.maximize_window()
-    print("iniciando amazon.py----------")
+    print("iniciando get_title.py----------")
 
     # Obtener y mostrar la versión y la ruta del ChromeDriver
     driver_version = driver.capabilities['chrome']['chromedriverVersion'].split(' ')[0]
@@ -118,5 +159,24 @@ def skip_captcha(driver):
         print("Captcha: No se encontró el botón en el tiempo esperado. Refrescando la página...")
         driver.refresh()
         time.sleep(2)  # Agregar una pausa breve después de refrescar
+def get_product_title_mercadolibre(url):
+    print("Iniciando mercadolibre.py----------")
+    driver = webdriver.Chrome()
+    driver.maximize_window()
 
+    try:
+        driver.get(url)
+        time.sleep(3)
+
+        titulo_elemento = driver.find_element(By.CLASS_NAME, "ui-pdp-title")
+        titulo = titulo_elemento.text.strip() if titulo_elemento else "No se encontró el título del producto"
+        print(titulo)
+
+        insert_log('success', f'Título obtenido exitosamente: "{titulo}" para la URL: {url}')
+        return titulo
+    except Exception as e:
+        insert_log('error', 'Error al obtener el título del producto', details=str(e))
+        return f"Error al obtener el producto: {e}"
+    finally:
+        driver.quit()
 '''

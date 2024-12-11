@@ -1,4 +1,4 @@
-from scraping.amazon import get_product_title_amazon
+from scraping.get_title import get_product_title
 from utils.ai_recommendations import generate_recommendation
 from scraping.youtube import search_and_play_youtube_video
 from utils.categories import (
@@ -25,7 +25,8 @@ if categoria:
 
         if search_variant:
             # Obtener el título del producto
-            titulo_producto = get_product_title_amazon(selected_link)
+            print(selected_link)
+            titulo_producto = get_product_title(selected_link)
 
             # Generar comentario con Cohere
             try:
